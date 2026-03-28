@@ -18,8 +18,8 @@ export const SITE_CONFIG = {
     },
   ],
   social: {
-    instagram: "https://www.instagram.com/",
-    youtube: "https://www.youtube.com/",
+    instagram: "https://www.instagram.com/moonee_lee/",
+    youtube: "https://www.youtube.com/channel/UC_GEes8puaUEHUYy053v64Q",
   },
   copyright: "istandby4u2",
 } as const;
