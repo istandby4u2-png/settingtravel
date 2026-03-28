@@ -8,7 +8,8 @@ from datetime import datetime, timezone
 import httpx
 
 SCOPES = ["https://www.googleapis.com/auth/photoslibrary.readonly"]
-TOKEN_PATH = Path(__file__).parent.parent / "data" / "google_token.json"
+_data_dir = Path(os.environ.get("DATA_DIR", str(Path(__file__).parent.parent)))
+TOKEN_PATH = _data_dir / "google_token.json"
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 

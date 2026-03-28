@@ -10,7 +10,8 @@ from google.genai import types
 from auth.google_auth import get_valid_access_token
 
 PHOTOS_API = "https://photoslibrary.googleapis.com/v1"
-DOWNLOAD_DIR = Path(__file__).parent.parent / "data" / "photos"
+_data_dir = Path(os.environ.get("DATA_DIR", str(Path(__file__).parent.parent / "data")))
+DOWNLOAD_DIR = _data_dir / "photos"
 
 
 async def search_photos(query: str, page_size: int = 20, page_token: str | None = None) -> dict:

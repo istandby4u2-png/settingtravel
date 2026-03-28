@@ -1,3 +1,5 @@
+import os
+
 from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
 
@@ -11,10 +13,12 @@ from auth.google_auth import (
 router = APIRouter()
 
 REDIRECT_PATH = "/api/auth/google/callback"
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 
 
 def _build_redirect_uri(request: Request) -> str:
-    return f"http://localhost:8000{REDIRECT_PATH}"
+    backend_url = os.environ.get("BACKEND_URL", "http://localhost:8000")
+    return f"{backend_url}{REDIRECT_PATH}"
 
 
 @router.get("/google/status")
@@ -34,18 +38,18 @@ async def google_login(request: Request):
 @router.get("/google/callback")
 async def google_callback(request: Request, code: str | None = None, error: str | None = None):
     if error:
-        return RedirectResponse(url=f"http://localhost:3000/photos?error={error}")
+        return RedirectResponse(url=f"{FRONTEND_URL}/photos?error={error}")
 
     if not code:
-        return RedirectResponse(url="http://localhost:3000/photos?error=no_code")
+        return RedirectResponse(url=f"{FRONTEND_URL}/photos?error=no_code")
 
     redirect_uri = _build_redirect_uri(request)
     token = await exchange_code(code, redirect_uri)
 
     if not token:
-        return RedirectResponse(url="http://localhost:3000/photos?error=token_exchange_failed")
+        return RedirectResponse(url=f"{FRONTEND_URL}/photos?error=token_exchange_failed")
 
-    return RedirectResponse(url="http://localhost:3000/photos?auth=success")
+    return RedirectResponse(url=f"{FRONTEND_URL}/photos?auth=success")
 
 
 @router.post("/google/logout")

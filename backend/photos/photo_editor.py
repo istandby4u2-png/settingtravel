@@ -12,7 +12,8 @@ import numpy as np
 from google import genai
 from google.genai import types
 
-OUTPUT_DIR = Path(__file__).parent.parent / "data" / "edited"
+_data_dir = Path(os.environ.get("DATA_DIR", str(Path(__file__).parent.parent / "data")))
+OUTPUT_DIR = _data_dir / "edited"
 
 
 async def analyze_photo(image_bytes: bytes) -> dict:
