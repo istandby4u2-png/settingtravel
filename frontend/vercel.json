@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "istandby4u2.com" }],
+      "destination": "https://www.istandby4u2.com/:path*",
+      "permanent": true
+    }
+  ]
+}

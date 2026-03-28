@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+aiosqlite
+python-dotenv
+playwright
+beautifulsoup4
+httpx
+google-generativeai
+google-genai
+pydantic
+Pillow
+numpy

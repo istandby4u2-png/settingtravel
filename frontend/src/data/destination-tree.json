@@ -1,0 +1,289 @@
+{
+  "version": 1,
+  "description": "Google Sites Destination 목차 일부 (istandby4u2). 세부 URL은 기존 사이트에서 확인합니다.",
+  "nodes": [
+    {
+      "id": "au",
+      "label": "Australia",
+      "children": [
+        { "id": "au-huskisson", "label": "huskisson" },
+        { "id": "au-jervis", "label": "jervis bay" },
+        { "id": "au-kiama", "label": "kiama" },
+        { "id": "au-nowra", "label": "nowra" },
+        { "id": "au-sydney", "label": "sydney" },
+        { "id": "au-wollongong", "label": "wollongong" }
+      ]
+    },
+    {
+      "id": "ca",
+      "label": "Canada",
+      "children": []
+    },
+    {
+      "id": "cn",
+      "label": "China",
+      "children": [
+        {
+          "id": "cn-lushan",
+          "label": "루산 (lushan)"
+        },
+        {
+          "id": "cn-macau",
+          "label": "마카오 (Macau)",
+          "children": [
+            { "id": "cn-macau-1", "label": "[꽃보다 남자 속 그곳] 육포거리 거기수신 (Koi Kei Bakery)" },
+            { "id": "cn-macau-2", "label": "[꽃보다 남자 속 그곳] 성 바오로 대성당" },
+            { "id": "cn-macau-3", "label": "[꽃보다 남자 속 그곳] 세나도 광장" }
+          ]
+        },
+        { "id": "cn-bj-sh", "label": "베이징 vs. 상하이" },
+        {
+          "id": "cn-beijing",
+          "label": "베이징 (Beijing)",
+          "children": [
+            { "id": "cn-bj-1", "label": "[골치아픈 사랑 속 그곳] 베이징남역" },
+            { "id": "cn-bj-2", "label": "[러셀 북경에 가다 속 그곳] 북경대학교" },
+            { "id": "cn-bj-3", "label": "[배낭에 담아온 중국 속 그곳] 왕푸징" },
+            { "id": "cn-bj-4", "label": "[베이징이야기 속 그 곳] 스치하이" },
+            { "id": "cn-bj-5", "label": "[북경자전거 속 그곳] 후통" },
+            { "id": "cn-bj-6", "label": "[세계 속 그곳] 세계공원" },
+            { "id": "cn-bj-7", "label": "[세계도시 베이징…] 798 예술구" },
+            { "id": "cn-bj-8", "label": "[홍루몽 속 그 곳] 대관원" },
+            { "id": "cn-bj-9", "label": "베이징동물원" }
+          ]
+        },
+        {
+          "id": "cn-shanghai",
+          "label": "상하이 (Shanghai)",
+          "children": [
+            { "id": "cn-sh-1", "label": "[색,계 속 그곳] 상해영시낙원" },
+            { "id": "cn-sh-2", "label": "난징루" },
+            { "id": "cn-sh-3", "label": "와이탄 (外滩)" },
+            { "id": "cn-sh-4", "label": "타이캉루 (泰康路)" }
+          ]
+        },
+        { "id": "cn-sanqing", "label": "싼칭산 (sanqingshan)" },
+        {
+          "id": "cn-wuyi",
+          "label": "우이산 (wuyishan)",
+          "children": [
+            { "id": "cn-wy-1", "label": "무이산 구곡계" },
+            { "id": "cn-wy-2", "label": "우이궁" },
+            { "id": "cn-wy-3", "label": "우이산시내" }
+          ]
+        },
+        {
+          "id": "cn-hk",
+          "label": "홍콩 (Hongkong)",
+          "children": [
+            { "id": "cn-hk-1", "label": "[공항에서 속 그곳] 주룽, 빅토리아피크" },
+            { "id": "cn-hk-2", "label": "[중경삼림 속 그곳] 힐사이드 에스컬레이터" },
+            { "id": "cn-hk-3", "label": "[첨밀밀 속 그 곳] 캔톤로드" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ee",
+      "label": "Estonia",
+      "children": []
+    },
+    {
+      "id": "fi",
+      "label": "Finland",
+      "children": [
+        { "id": "fi-helsinki", "label": "helsinki" },
+        { "id": "fi-hame", "label": "Hämeenlinna" }
+      ]
+    },
+    {
+      "id": "fr",
+      "label": "France",
+      "children": [
+        { "id": "fr-nice", "label": "니스 (Nice)" },
+        { "id": "fr-marseille", "label": "마르세유 (Marseille)" },
+        { "id": "fr-spv", "label": "생폴드방스 (Saint Paul de Vence)" },
+        { "id": "fr-arles", "label": "아를 (Arles)" },
+        { "id": "fr-avignon", "label": "아비뇽 (Avignon)" },
+        { "id": "fr-eze", "label": "에즈 (Eze)" },
+        { "id": "fr-aix", "label": "엑상 프로방스 (Aix-en-provence)" }
+      ]
+    },
+    {
+      "id": "jp",
+      "label": "Japan",
+      "children": [
+        {
+          "id": "jp-hokkaido",
+          "label": "hokkaido",
+          "children": [
+            { "id": "jp-hk-1", "label": "숲의 시계는 천천히 시간을 새긴다, 홋카이도" }
+          ]
+        },
+        {
+          "id": "jp-kanagawa",
+          "label": "kanagawa",
+          "children": [
+            { "id": "jp-kg-1", "label": "가마쿠라 메이게쓰엔" },
+            { "id": "jp-kg-2", "label": "쓰루가오카하치만궁" },
+            { "id": "jp-kg-3", "label": "요코하마항" }
+          ]
+        },
+        {
+          "id": "jp-kyoto",
+          "label": "kyoto",
+          "children": [
+            { "id": "jp-ky-1", "label": "금각사" },
+            { "id": "jp-ky-2", "label": "기요미즈데라" },
+            { "id": "jp-ky-3", "label": "니조성" },
+            { "id": "jp-ky-4", "label": "철학의 길" }
+          ]
+        },
+        {
+          "id": "jp-tokyo",
+          "label": "tokyo",
+          "children": [
+            { "id": "jp-tk-1", "label": "[가족의 나라 속 그곳] 우에노역" },
+            { "id": "jp-tk-2", "label": "[구구는 고양이다 속 그곳] 키치조지" },
+            { "id": "jp-tk-3", "label": "[리갈하이 속 그곳] 도쿄스카이트리" },
+            { "id": "jp-tk-4", "label": "우에노 동물원" }
+          ]
+        },
+        {
+          "id": "jp-shizuoka",
+          "label": "shizuoka",
+          "children": [
+            { "id": "jp-sz-1", "label": "[솔개 속 그곳] 도쇼구" },
+            { "id": "jp-sz-2", "label": "후지사파리파크" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kr",
+      "label": "Korea",
+      "children": [
+        {
+          "id": "kr-gangwon",
+          "label": "강원도",
+          "children": [
+            { "id": "kr-gw-chuncheon", "label": "춘천 — 김유정 문학촌, 《봄봄》" },
+            { "id": "kr-gw-pyeongchang", "label": "평창 — 이효석 문학관, 《메밀꽃 필 무렵》" },
+            { "id": "kr-gw-jeongseon", "label": "정선 — 락있수다, 정선여행" },
+            {
+              "id": "kr-gw-cheorwon",
+              "label": "철원",
+              "children": [
+                { "id": "kr-cw-1", "label": "노동당사" },
+                { "id": "kr-cw-2", "label": "철원평화전망대" },
+                { "id": "kr-cw-3", "label": "제2땅굴" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "kr-gyeonggi",
+          "label": "경기도",
+          "children": [
+            {
+              "id": "kr-gg-goyang",
+              "label": "고양 (goyang)",
+              "children": [
+                { "id": "kr-gy-1", "label": "킨텍스 커피&베이커리 페어" },
+                { "id": "kr-gy-2", "label": "송강문학관" }
+              ]
+            },
+            {
+              "id": "kr-gg-yangpyeong",
+              "label": "양평 (Yangpyeong)",
+              "children": [
+                { "id": "kr-yp-1", "label": "황순원문학촌, 《소나기》 배경" },
+                { "id": "kr-yp-2", "label": "테라로사" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "kr-seoul",
+          "label": "서울 (seoul)",
+          "children": [
+            { "id": "kr-sl-1", "label": "롯데월드, 《천국의 계단》 촬영지" },
+            { "id": "kr-sl-2", "label": "정동길, 《지하철 史호선》 속 그곳" },
+            { "id": "kr-sl-3", "label": "광화문·주한미대사관 일대, 《새해》 배경" }
+          ]
+        },
+        {
+          "id": "kr-jeju",
+          "label": "제주도 (jeju)",
+          "children": [
+            { "id": "kr-jj-1", "label": "[올인 속 그곳] 섭지코지" },
+            { "id": "kr-jj-2", "label": "올레길" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "my",
+      "label": "Malaysia",
+      "children": [{ "id": "my-kl", "label": "쿠알라룸푸르 (Kuala Lumpur)" }]
+    },
+    {
+      "id": "no",
+      "label": "Norway",
+      "children": [
+        {
+          "id": "no-bergen",
+          "label": "베르겐 (bergen)",
+          "children": [
+            { "id": "no-bg-1", "label": "[Culture shock!. Norway] 올레불 동상" },
+            { "id": "no-bg-2", "label": "베르겐 미술관" }
+          ]
+        },
+        { "id": "no-oslo", "label": "오슬로 (Oslo)" }
+      ]
+    },
+    {
+      "id": "uk",
+      "label": "United Kingdom",
+      "children": [
+        {
+          "id": "uk-liverpool",
+          "label": "liverpool",
+          "children": [
+            { "id": "uk-lp-1", "label": "비틀즈스토리" },
+            { "id": "uk-lp-2", "label": "캐번클럽" }
+          ]
+        },
+        {
+          "id": "uk-london",
+          "label": "london",
+          "children": [
+            { "id": "uk-ld-1", "label": "대영박물관" },
+            { "id": "uk-ld-2", "label": "빅벤" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "us",
+      "label": "United States",
+      "children": [
+        {
+          "id": "us-la",
+          "label": "Los Angeles",
+          "children": [
+            { "id": "us-la-1", "label": "LA 더 라스트 북스토어" }
+          ]
+        },
+        {
+          "id": "us-sf",
+          "label": "San francisco",
+          "children": [
+            { "id": "us-sf-1", "label": "스탠퍼드 봄날" },
+            { "id": "us-sf-2", "label": "소살리토" }
+          ]
+        }
+      ]
+    }
+  ]
+}
