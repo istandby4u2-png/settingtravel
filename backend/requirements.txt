@@ -9,5 +9,6 @@ httpx
 google-generativeai
 google-genai
 pydantic
+apscheduler
 Pillow
 numpy

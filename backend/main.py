@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import init_db
 from routers import scrape, analyze, generate, auth, photos, blog, booklog
+from scheduler import start_scheduler, stop_scheduler
 
 load_dotenv()
 
@@ -19,7 +20,9 @@ if _extra.strip():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    start_scheduler()
     yield
+    stop_scheduler()
 
 
 app = FastAPI(title="블로그 문체 분석 & 자동 생성 서비스", lifespan=lifespan)
