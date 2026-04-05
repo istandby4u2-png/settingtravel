@@ -17,6 +17,16 @@ class Base(DeclarativeBase):
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # lightweight migration: add columns if missing (SQLite)
+        for col, typedef in [("thumbnail", "VARCHAR(2000)"), ("images", "TEXT")]:
+            try:
+                await conn.execute(
+                    __import__("sqlalchemy").text(
+                        f"ALTER TABLE posts ADD COLUMN {col} {typedef}"
+                    )
+                )
+            except Exception:
+                pass
 
 
 async def get_db():

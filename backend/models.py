@@ -12,6 +12,8 @@ class Post(Base):
     content = Column(Text, nullable=False)
     url = Column(String(1000), unique=True, nullable=False)
     published_date = Column(String(50))
+    thumbnail = Column(String(2000), nullable=True)
+    images = Column(JSON, nullable=True)
     scraped_at = Column(DateTime, server_default=func.now())
 
 

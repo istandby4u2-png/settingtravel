@@ -43,6 +43,7 @@ async def list_public_posts(
                 "excerpt": (p.content[:280] + "…") if len(p.content) > 280 else p.content,
                 "url": p.url,
                 "published_date": p.published_date,
+                "thumbnail": p.thumbnail,
                 "scraped_at": str(p.scraped_at) if p.scraped_at else None,
             }
             for p in posts
@@ -67,5 +68,7 @@ async def get_public_post(post_id: int, db: AsyncSession = Depends(get_db)):
         "content": post.content,
         "url": post.url,
         "published_date": post.published_date,
+        "thumbnail": post.thumbnail,
+        "images": post.images,
         "scraped_at": str(post.scraped_at) if post.scraped_at else None,
     }

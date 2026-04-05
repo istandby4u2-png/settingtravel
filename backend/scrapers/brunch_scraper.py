@@ -85,17 +85,29 @@ async def _scrape_article(
         else date_el.get_text(strip=True) if date_el else ""
     )
 
+    og_img = soup.select_one("meta[property='og:image']")
+    thumbnail = og_img.get("content", "").strip() if og_img else ""
+
+    images: list[str] = []
+    body_root = body_el or soup
+    for img in body_root.select("img[src]"):
+        src = (img.get("data-src") or img.get("src") or "").strip()
+        if src and src not in images and not src.endswith(".gif"):
+            images.append(src)
+
     if not content or len(content) < 30:
         print(f"[brunch] Skipping (too short): {url}")
         return None
 
-    print(f"[brunch] OK: '{title[:40]}' ({len(content)} chars)")
+    print(f"[brunch] OK: '{title[:40]}' ({len(content)} chars, {len(images)} imgs)")
     return {
         "source": "brunch",
         "title": title,
         "content": content,
         "url": url,
         "published_date": pub_date,
+        "thumbnail": thumbnail,
+        "images": images,
     }
 
 

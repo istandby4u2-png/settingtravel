@@ -144,18 +144,24 @@ async def _run_scraping():
         async with async_session() as db:
             all_posts = brunch_posts + naver_posts
             saved = 0
+            updated = 0
             for post_data in all_posts:
-                existing = await db.execute(
+                result = await db.execute(
                     select(Post).where(Post.url == post_data["url"])
                 )
-                if existing.scalar_one_or_none() is None:
+                existing_post = result.scalar_one_or_none()
+                if existing_post is None:
                     db.add(Post(**post_data))
                     saved += 1
+                elif not existing_post.thumbnail and post_data.get("thumbnail"):
+                    existing_post.thumbnail = post_data["thumbnail"]
+                    existing_post.images = post_data.get("images")
+                    updated += 1
             await db.commit()
 
         scrape_status["progress"] = (
             f"완료! 브런치 {len(brunch_posts)}개, 네이버 {len(naver_posts)}개 수집. "
-            f"신규 {saved}개 저장."
+            f"신규 {saved}개 저장, 이미지 {updated}개 업데이트."
         )
     except Exception as e:
         scrape_status["error"] = str(e)

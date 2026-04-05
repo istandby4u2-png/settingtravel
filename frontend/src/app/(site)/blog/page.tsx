@@ -17,6 +17,7 @@ interface BlogListPost {
   excerpt: string;
   url: string;
   published_date: string | null;
+  thumbnail: string | null;
   scraped_at: string | null;
 }
 
@@ -177,7 +178,18 @@ function PostGrid({
     <div className="grid gap-4 sm:grid-cols-2">
       {posts.map((post) => (
         <Link key={post.id} href={`/blog/${post.id}`} className="group block">
-          <Card className="h-full transition-shadow hover:shadow-md hover:border-primary/20">
+          <Card className="h-full overflow-hidden transition-shadow hover:shadow-md hover:border-primary/20">
+            {post.thumbnail && (
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={post.thumbnail}
+                  alt={post.title || ""}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+            )}
             <CardHeader className="space-y-2">
               <div className="flex items-center gap-2">
                 <SourceBadge source={post.source} />
@@ -190,7 +202,7 @@ function PostGrid({
               </h2>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">{post.excerpt}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{post.excerpt}</p>
             </CardContent>
           </Card>
         </Link>

@@ -16,6 +16,8 @@ interface BlogPost {
   content: string;
   url: string;
   published_date: string | null;
+  thumbnail: string | null;
+  images: string[] | null;
   scraped_at: string | null;
 }
 
@@ -126,11 +128,43 @@ export default function BlogPostPage() {
           </a>
         </header>
 
+        {post.thumbnail && (
+          <div className="rounded-lg overflow-hidden border border-border/60">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={post.thumbnail}
+              alt={post.title || ""}
+              className="w-full max-h-[480px] object-cover"
+            />
+          </div>
+        )}
+
         <Card className="border-border/80 shadow-sm">
-          <CardContent className="pt-6 sm:pt-8 pb-8">
+          <CardContent className="pt-6 sm:pt-8 pb-8 space-y-6">
             <div className="text-base leading-[1.75] text-foreground/90 whitespace-pre-wrap break-words">
               {post.content}
             </div>
+
+            {post.images && post.images.length > 0 && (
+              <div className="space-y-4 pt-4 border-t border-border/50">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  본문 이미지
+                </p>
+                <div className="grid gap-3">
+                  {post.images.map((src, i) => (
+                    <div key={i} className="rounded-lg overflow-hidden border border-border/40">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={src}
+                        alt={`${post.title} 이미지 ${i + 1}`}
+                        className="w-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

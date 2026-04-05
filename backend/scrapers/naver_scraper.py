@@ -190,17 +190,33 @@ async def _scrape_post(client: httpx.AsyncClient, url: str, index: int, total: i
     else:
         pub_date = ""
 
+    og_img = soup.select_one("meta[property='og:image']")
+    thumbnail = og_img.get("content", "").strip() if og_img else ""
+
+    images: list[str] = []
+    body_root = body_el or soup
+    for img in body_root.select("img[src], img[data-lazy-src], img[data-src]"):
+        src = (
+            img.get("data-lazy-src") or img.get("data-src") or img.get("src") or ""
+        ).strip()
+        if src and src not in images and not src.endswith(".gif"):
+            if src.startswith("//"):
+                src = "https:" + src
+            images.append(src)
+
     if not content or len(content) < 30:
         print(f"[naver] Skipping (content too short): {url}")
         return None
 
-    print(f"[naver] OK: '{title[:40]}' ({len(content)} chars)")
+    print(f"[naver] OK: '{title[:40]}' ({len(content)} chars, {len(images)} imgs)")
     return {
         "source": "naver",
         "title": title,
         "content": content,
         "url": url,
         "published_date": pub_date,
+        "thumbnail": thumbnail,
+        "images": images,
     }
 
 
