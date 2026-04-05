@@ -89,13 +89,27 @@ npm run dev
 | Method | Path | 설명 |
 |--------|------|------|
 | GET | `/api/health` | 서버 상태 확인 |
-| POST | `/api/scrape/start` | 스크래핑 시작 |
+| POST | `/api/scrape/start` | 스크래핑 시작 (대시보드·수동) |
+| POST | `/api/scrape/cron` | 스케줄용 스크래핑 시작 (`CRON_SECRET` + `Authorization: Bearer …` 또는 `X-Cron-Secret`) |
 | GET | `/api/scrape/status` | 스크래핑 상태 조회 |
 | GET | `/api/scrape/posts` | 수집된 글 목록 |
 | POST | `/api/analyze/run` | 문체 분석 실행 |
 | GET | `/api/analyze/latest` | 최신 분석 결과 |
 | POST | `/api/generate/create` | 블로그 글 생성 |
 | GET | `/api/generate/history` | 생성 히스토리 |
+
+## 자동 아카이브 (스케줄)
+
+프론트의 `/blog`는 API의 `GET /api/blog/posts`로 DB에 쌓인 글을 보여 줍니다. 새 글을 주기적으로 반영하려면 백엔드에 `CRON_SECRET`을 넣고, 스케줄러가 `POST /api/scrape/cron`을 호출하면 됩니다.
+
+1. **Fly.io (또는 호스팅) 시크릿**: `CRON_SECRET`을 임의의 긴 문자열로 설정합니다.  
+   `fly secrets set CRON_SECRET='...'`
+2. **GitHub Actions** (이 저장소에 `.github/workflows/scheduled-blog-archive.yml` 포함):  
+   Repository secrets에 `BACKEND_API_URL`(예: `https://your-app.fly.dev`), `CRON_SECRET`(위와 동일)을 추가합니다.  
+   매일 실행되며, 필요하면 Actions에서 **Run workflow**로 수동 실행할 수 있습니다.
+3. **다른 서비스** (cron-job.org 등): 동일 URL로 `POST`, 헤더 `Authorization: Bearer <CRON_SECRET>`.
+
+`CRON_SECRET`이 비어 있으면 `/api/scrape/cron`은 503을 반환합니다.
 
 ## 참고사항
 

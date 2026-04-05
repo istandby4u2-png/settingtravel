@@ -1,7 +1,16 @@
-app = 'settingtravel-api'
+# fly.toml app configuration file generated for settingtravel-api-lively-sunset-4048 on 2026-03-28T23:13:38+09:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'settingtravel-api-lively-sunset-4048'
 primary_region = 'nrt'
 
 [build]
+
+[[mounts]]
+  source = 'data'
+  destination = '/data'
 
 [http_service]
   internal_port = 8080
@@ -10,19 +19,15 @@ primary_region = 'nrt'
   auto_start_machines = true
   min_machines_running = 0
 
-[mounts]
-  source = 'data'
-  destination = '/data'
+[checks]
+  [checks.health]
+    port = 8080
+    type = 'http'
+    interval = '30s'
+    timeout = '5s'
+    path = '/api/health'
 
 [[vm]]
   memory = '512mb'
-  cpu_kind = 'shared'
   cpus = 1
-
-[checks]
-  [checks.health]
-    type = 'http'
-    port = 8080
-    path = '/api/health'
-    interval = '30s'
-    timeout = '5s'
+  memory_mb = 512

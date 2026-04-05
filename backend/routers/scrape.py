@@ -1,11 +1,12 @@
 import asyncio
 import io
+import os
 import re
 import zipfile
 from datetime import datetime
 from typing import Literal
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
@@ -16,6 +17,26 @@ from scrapers.brunch_scraper import scrape_brunch
 from scrapers.naver_scraper import scrape_naver
 
 router = APIRouter()
+
+
+async def _verify_cron_secret(
+    authorization: str | None = Header(None),
+    x_cron_secret: str | None = Header(None, alias="X-Cron-Secret"),
+) -> None:
+    """Bearer token or X-Cron-Secret must match CRON_SECRET (for scheduled / external cron)."""
+    expected = os.getenv("CRON_SECRET", "").strip()
+    if not expected:
+        raise HTTPException(
+            status_code=503,
+            detail="CRON_SECRET is not set; scheduled scraping is disabled.",
+        )
+    token: str | None = None
+    if authorization and authorization.lower().startswith("bearer "):
+        token = authorization[7:].strip()
+    elif x_cron_secret:
+        token = x_cron_secret.strip()
+    if not token or token != expected:
+        raise HTTPException(status_code=401, detail="Invalid or missing cron credentials.")
 
 
 def _safe_filename(title: str, fallback: str, max_len: int = 100) -> str:
@@ -68,10 +89,10 @@ async def get_scrape_status(db: AsyncSession = Depends(get_db)):
     }
 
 
-@router.post("/start")
-async def start_scraping(db: AsyncSession = Depends(get_db)):
+def _begin_scrape_job() -> dict:
+    """Shared kick-off for manual / scheduled runs."""
     if scrape_status["is_running"]:
-        return {"message": "스크래핑이 이미 진행 중입니다."}
+        return {"message": "스크래핑이 이미 진행 중입니다.", "started": False}
 
     scrape_status["is_running"] = True
     scrape_status["error"] = None
@@ -80,7 +101,19 @@ async def start_scraping(db: AsyncSession = Depends(get_db)):
     scrape_status["progress"] = "브런치 블로그 스크래핑 시작..."
 
     asyncio.create_task(_run_scraping())
-    return {"message": "스크래핑이 시작되었습니다."}
+    return {"message": "스크래핑이 시작되었습니다.", "started": True}
+
+
+@router.post("/start")
+async def start_scraping():
+    return _begin_scrape_job()
+
+
+@router.post("/cron")
+async def cron_scrape(_: None = Depends(_verify_cron_secret)):
+    """스케줄러·GitHub Actions 등에서 호출해 브런치·네이버 글을 자동 아카이브합니다. CRON_SECRET 필요."""
+    result = _begin_scrape_job()
+    return {**result, "trigger": "cron"}
 
 
 @router.post("/reset")
