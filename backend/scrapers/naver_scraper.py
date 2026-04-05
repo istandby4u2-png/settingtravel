@@ -69,7 +69,11 @@ async def _get_post_urls_via_playwright() -> list[str]:
     print("[naver] Falling back to Playwright method...")
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await p.chromium.launch(
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--single-process"],
+            timeout=30_000,
+        )
         context = await browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) "
@@ -79,7 +83,6 @@ async def _get_post_urls_via_playwright() -> list[str]:
         )
         page = await context.new_page()
 
-        # Use the desktop post list page which has pagination
         desktop_url = f"https://blog.naver.com/PostList.naver?blogId={BLOG_ID}&categoryNo=0&from=postList"
         print(f"[naver] Loading {desktop_url}")
         await page.goto(desktop_url, wait_until="domcontentloaded", timeout=20000)

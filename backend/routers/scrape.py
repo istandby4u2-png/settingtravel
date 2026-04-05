@@ -126,10 +126,13 @@ async def reset_scraping():
 
 
 async def _run_scraping():
+    import logging
+    log = logging.getLogger("scrape")
     from database import async_session
 
     try:
         scrape_status["progress"] = "브런치 블로그 스크래핑 중..."
+        log.info("Starting brunch scrape...")
         brunch_posts = await scrape_brunch()
         scrape_status["brunch_count"] = len(brunch_posts)
         scrape_status["progress"] = f"브런치 {len(brunch_posts)}개 수집 완료. 네이버 블로그 스크래핑 중..."
