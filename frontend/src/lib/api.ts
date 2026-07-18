@@ -43,6 +43,7 @@ export const api = {
         excerpt: string;
         url: string;
         published_date: string | null;
+        thumbnail: string | null;
         scraped_at: string | null;
       }>;
       total: number;
@@ -63,6 +64,8 @@ export const api = {
       content: string;
       url: string;
       published_date: string | null;
+      thumbnail: string | null;
+      images: string[] | null;
       scraped_at: string | null;
     }>;
   },
