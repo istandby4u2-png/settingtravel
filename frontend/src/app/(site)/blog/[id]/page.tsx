@@ -135,6 +135,7 @@ export default function BlogPostPage() {
               src={post.thumbnail}
               alt={post.title || ""}
               className="w-full max-h-[480px] object-cover"
+              referrerPolicy="no-referrer"
             />
           </div>
         )}
@@ -159,6 +160,7 @@ export default function BlogPostPage() {
                         alt={`${post.title} 이미지 ${i + 1}`}
                         className="w-full object-contain"
                         loading="lazy"
+                        referrerPolicy="no-referrer"
                       />
                     </div>
                   ))}

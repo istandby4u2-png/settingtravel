@@ -2,17 +2,19 @@ import asyncio
 import re
 import httpx
 from bs4 import BeautifulSoup
-from playwright.async_api import async_playwright
 
 
 BLOG_ID = "istandby4u2"
 MOBILE_BASE = f"https://m.blog.naver.com/{BLOG_ID}"
 
 
+MAX_LIST_PAGES = 100
+
+
 async def _get_post_urls_via_api() -> list[str]:
     """Use Naver blog's internal API to fetch post list."""
     urls: list[str] = []
-    page_num = 1
+    seen_log_nos: set[str] = set()
 
     print("[naver] Trying API method to get post list...")
     async with httpx.AsyncClient(
@@ -27,7 +29,9 @@ async def _get_post_urls_via_api() -> list[str]:
         follow_redirects=True,
         timeout=20,
     ) as client:
-        while True:
+        # 응답에 hasNext/totalCount가 더 이상 없으므로,
+        # 빈 페이지 또는 전부 중복인 페이지가 나올 때까지 순회한다.
+        for page_num in range(1, MAX_LIST_PAGES + 1):
             api_url = (
                 f"https://m.blog.naver.com/api/blogs/{BLOG_ID}/post-list"
                 f"?categoryNo=0&itemCount=30&page={page_num}"
@@ -47,17 +51,20 @@ async def _get_post_urls_via_api() -> list[str]:
                 print(f"[naver] No more items at page {page_num}")
                 break
 
+            new_count = 0
             for item in items:
-                log_no = item.get("logNo")
-                if log_no:
+                log_no = str(item.get("logNo") or "")
+                if log_no and log_no not in seen_log_nos:
+                    seen_log_nos.add(log_no)
                     urls.append(f"https://m.blog.naver.com/{BLOG_ID}/{log_no}")
+                    new_count += 1
 
-            print(f"[naver] API page {page_num}: got {len(items)} items (total: {len(urls)})")
-
-            has_next = data.get("result", {}).get("hasNext", False)
-            if not has_next:
+            print(
+                f"[naver] API page {page_num}: {len(items)} items, "
+                f"{new_count} new (total: {len(urls)})"
+            )
+            if new_count == 0:
                 break
-            page_num += 1
             await asyncio.sleep(0.5)
 
     return urls
@@ -67,6 +74,12 @@ async def _get_post_urls_via_playwright() -> list[str]:
     """Fallback: use Playwright to scrape the post list from mobile page."""
     urls: list[str] = []
     print("[naver] Falling back to Playwright method...")
+
+    try:
+        from playwright.async_api import async_playwright
+    except ImportError:
+        print("[naver] Playwright is not installed; skipping fallback")
+        return []
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
@@ -140,6 +153,13 @@ async def _get_post_urls_via_rss() -> list[str]:
     return urls
 
 
+def _upgrade_image_url(src: str) -> str:
+    """모바일 페이지의 축소 썸네일(type=w400 등)을 고해상도(w966)로 교체."""
+    if "mblogthumb-phinf.pstatic.net" in src or "postfiles.pstatic.net" in src:
+        return re.sub(r"([?&])type=w\d+", r"\1type=w966", src)
+    return src
+
+
 async def _scrape_post(client: httpx.AsyncClient, url: str, index: int, total: int) -> dict | None:
     """Scrape a single Naver blog post using the mobile URL."""
     print(f"[naver] Scraping post {index}/{total}: {url}")
@@ -199,10 +219,12 @@ async def _scrape_post(client: httpx.AsyncClient, url: str, index: int, total: i
         src = (
             img.get("data-lazy-src") or img.get("data-src") or img.get("src") or ""
         ).strip()
-        if src and src not in images and not src.endswith(".gif"):
+        if src and not src.endswith(".gif"):
             if src.startswith("//"):
                 src = "https:" + src
-            images.append(src)
+            src = _upgrade_image_url(src)
+            if src not in images:
+                images.append(src)
 
     if not content or len(content) < 30:
         print(f"[naver] Skipping (content too short): {url}")

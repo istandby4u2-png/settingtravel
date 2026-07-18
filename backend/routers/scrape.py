@@ -153,10 +153,16 @@ async def _run_scraping():
                 if existing_post is None:
                     db.add(Post(**post_data))
                     saved += 1
-                elif not existing_post.thumbnail and post_data.get("thumbnail"):
-                    existing_post.thumbnail = post_data["thumbnail"]
-                    existing_post.images = post_data.get("images")
-                    updated += 1
+                else:
+                    changed = False
+                    if post_data.get("thumbnail") and post_data["thumbnail"] != existing_post.thumbnail:
+                        existing_post.thumbnail = post_data["thumbnail"]
+                        changed = True
+                    if post_data.get("images") and post_data["images"] != existing_post.images:
+                        existing_post.images = post_data["images"]
+                        changed = True
+                    if changed:
+                        updated += 1
             await db.commit()
 
         scrape_status["progress"] = (

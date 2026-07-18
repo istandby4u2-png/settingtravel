@@ -5,11 +5,9 @@ from bs4 import BeautifulSoup
 BRUNCH_BASE = "https://brunch.co.kr"
 AUTHOR_ID = "istandby4u2"
 
-_UA = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/120.0.0.0 Safari/537.36"
-)
+# 주의: 전체 데스크톱 크롬 UA를 쓰면 브런치가 카카오 로그인으로 리다이렉트한다.
+# 단순 UA는 페이지를 그대로 제공하므로 이를 사용한다.
+_UA = "Mozilla/5.0"
 
 MAX_ARTICLE_NO = 300
 CONSECUTIVE_404_LIMIT = 15
@@ -24,7 +22,8 @@ async def _discover_article_numbers(client: httpx.AsyncClient) -> list[int]:
         url = f"{BRUNCH_BASE}/@{AUTHOR_ID}/{no}"
         try:
             resp = await client.head(url)
-            if resp.status_code == 200:
+            # 로그인 페이지 등으로 리다이렉트되면 글이 있는 게 아니다
+            if resp.status_code == 200 and "brunch.co.kr" in str(resp.url):
                 found.append(no)
                 consecutive_404 = 0
             else:
@@ -47,8 +46,8 @@ async def _scrape_article(
     print(f"[brunch] {index}/{total}: {url}")
     try:
         resp = await client.get(url)
-        if resp.status_code != 200:
-            print(f"[brunch] HTTP {resp.status_code} for {url}")
+        if resp.status_code != 200 or "brunch.co.kr" not in str(resp.url):
+            print(f"[brunch] HTTP {resp.status_code} (final: {resp.url}) for {url}")
             return None
     except Exception as e:
         print(f"[brunch] Error: {url}: {e}")
