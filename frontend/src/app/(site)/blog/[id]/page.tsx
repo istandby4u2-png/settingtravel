@@ -136,6 +136,10 @@ export default function BlogPostPage() {
               alt={post.title || ""}
               className="w-full max-h-[480px] object-cover"
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                const box = e.currentTarget.parentElement;
+                if (box) box.style.display = "none";
+              }}
             />
           </div>
         )}
@@ -161,6 +165,10 @@ export default function BlogPostPage() {
                         className="w-full object-contain"
                         loading="lazy"
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          const box = e.currentTarget.parentElement;
+                          if (box) box.style.display = "none";
+                        }}
                       />
                     </div>
                   ))}

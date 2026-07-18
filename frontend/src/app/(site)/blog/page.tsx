@@ -188,6 +188,10 @@ function PostGrid({
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const box = e.currentTarget.parentElement;
+                    if (box) box.style.display = "none";
+                  }}
                 />
               </div>
             )}
