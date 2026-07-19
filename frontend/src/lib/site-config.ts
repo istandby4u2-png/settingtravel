@@ -13,7 +13,7 @@ export const SITE_CONFIG = {
     },
     {
       label: "리얼 홋카이도",
-      href: "https://search.shopping.naver.com/book/catalog/54911461237",
+      href: "https://search.shopping.naver.com/book/catalog/60140321908",
       coverSrc: "/books/real-hokkaido.png",
     },
   ],
