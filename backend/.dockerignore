@@ -4,6 +4,8 @@ __pycache__/
 .env
 *.db
 data/
+# 단, booklog 아카이브 원천 데이터는 이미지에 포함해야 임포트가 가능하다
+!data/booklog_purchases.json
 .git
 .venv
 venv

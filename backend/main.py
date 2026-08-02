@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import init_db
-from routers import scrape, analyze, generate, auth, photos, blog, booklog
+from routers import scrape, analyze, generate, auth, photos, blog, booklog, maps
 from scheduler import start_scheduler, stop_scheduler
 
 load_dotenv()
@@ -42,6 +42,7 @@ app.include_router(analyze.router, prefix="/api/analyze", tags=["analyze"])
 app.include_router(generate.router, prefix="/api/generate", tags=["generate"])
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(photos.router, prefix="/api/photos", tags=["photos"])
+app.include_router(maps.router)
 
 
 @app.get("/api/health")

@@ -5,7 +5,7 @@ import { SITE_CONFIG } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Booklog",
-  description: "연도별 독서·기록.",
+  description: "2010년부터의 도서 구매 기록 아카이브.",
 };
 
 export default function BooklogPage() {
@@ -18,12 +18,12 @@ export default function BooklogPage() {
       <div className="mt-6 rounded-lg border border-[var(--site-border)] bg-white/90 p-5 shadow-sm">
         <p className="text-sm font-medium text-[var(--site-ink)]">원문 Google Sites</p>
         <a
-          href={SITE_CONFIG.legacySitesUrl}
+          href={`${SITE_CONFIG.legacySitesUrl}/booklog`}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-2 inline-flex text-sm font-medium text-[var(--site-accent)] underline-offset-4 hover:underline"
         >
-          전체 Booklog·목차 열기 →
+          2010–2017 연도별 원문 열기 →
         </a>
       </div>
 

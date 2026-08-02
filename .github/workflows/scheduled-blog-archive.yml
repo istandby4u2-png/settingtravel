@@ -1,0 +1,27 @@
+# 브런치·네이버 블로그 → API DB 자동 동기화 (공개 /blog 아카이브)
+# Repository secrets: BACKEND_API_URL, CRON_SECRET (백엔드 fly secrets set CRON_SECRET 과 동일)
+name: Scheduled blog archive
+
+on:
+  schedule:
+    # 매일 18:00 UTC ≈ 한국시간 다음날 새벽 03:00 (서머타임 없음 기준)
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  trigger-scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST /api/scrape/cron
+        env:
+          BACKEND_API_URL: ${{ secrets.BACKEND_API_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$BACKEND_API_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "Set repository secrets: BACKEND_API_URL, CRON_SECRET"
+            exit 1
+          fi
+          curl -sS -f -X POST "${BACKEND_API_URL%/}/api/scrape/cron" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            -w "\nHTTP %{http_code}\n"

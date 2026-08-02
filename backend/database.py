@@ -14,17 +14,30 @@ class Base(DeclarativeBase):
     pass
 
 
+_MIGRATIONS: list[tuple[str, str, str]] = [
+    # (table, column, type)
+    ("posts", "thumbnail", "VARCHAR(2000)"),
+    ("posts", "images", "TEXT"),
+    ("booklog_entries", "translator", "VARCHAR(300)"),
+    ("booklog_entries", "publisher", "VARCHAR(300)"),
+    ("booklog_entries", "published", "VARCHAR(20)"),
+    ("booklog_entries", "purchase_date", "VARCHAR(20)"),
+    ("booklog_entries", "isbn", "VARCHAR(20)"),
+    ("booklog_entries", "cover_url", "VARCHAR(1200)"),
+    ("booklog_entries", "source", "VARCHAR(30)"),
+    ("booklog_entries", "source_ref", "VARCHAR(200)"),
+]
+
+
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         # lightweight migration: add columns if missing (SQLite)
-        for col, typedef in [("thumbnail", "VARCHAR(2000)"), ("images", "TEXT")]:
+        from sqlalchemy import text
+
+        for table, col, typedef in _MIGRATIONS:
             try:
-                await conn.execute(
-                    __import__("sqlalchemy").text(
-                        f"ALTER TABLE posts ADD COLUMN {col} {typedef}"
-                    )
-                )
+                await conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {col} {typedef}"))
             except Exception:
                 pass
 

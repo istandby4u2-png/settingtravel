@@ -3,6 +3,22 @@ const API_BASE =
     ? `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")}/api`
     : "/api";
 
+export type BooklogItem = {
+  id: number;
+  year: number | null;
+  title: string;
+  author: string | null;
+  translator: string | null;
+  publisher: string | null;
+  published: string | null;
+  purchase_date: string | null;
+  isbn: string | null;
+  cover_url: string | null;
+  note: string | null;
+  source: string | null;
+  source_url: string | null;
+};
+
 async function fetchAPI<T = unknown>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
@@ -95,26 +111,34 @@ export const api = {
 
   // Booklog
   getBooklogYears: () =>
-    fetchAPI<{ years: number[]; has_unassigned: boolean }>("/booklog/years"),
-  getBooklogItems: (opts?: { year?: number; unassigned?: boolean; page?: number; limit?: number }) => {
-    const q = new URLSearchParams();
-    if (opts?.year !== undefined) q.set("year", String(opts.year));
-    if (opts?.unassigned) q.set("unassigned", "true");
-    if (opts?.page) q.set("page", String(opts.page));
-    if (opts?.limit) q.set("limit", String(opts.limit));
-    const qs = q.toString();
+    fetchAPI<{
+      years: number[];
+      counts: Record<string, number>;
+      has_unassigned: boolean;
+      total: number;
+    }>("/booklog/years"),
+  getBooklogItems: (opts?: {
+    year?: number;
+    unassigned?: boolean;
+    source?: string;
+    q?: string;
+    page?: number;
+    limit?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (opts?.year !== undefined) params.set("year", String(opts.year));
+    if (opts?.unassigned) params.set("unassigned", "true");
+    if (opts?.source) params.set("source", opts.source);
+    if (opts?.q) params.set("q", opts.q);
+    if (opts?.page) params.set("page", String(opts.page));
+    if (opts?.limit) params.set("limit", String(opts.limit));
+    const qs = params.toString();
     return fetchAPI<{
-      items: Array<{
-        id: number;
-        year: number | null;
-        title: string;
-        author: string | null;
-        note: string | null;
-        source_url: string | null;
-      }>;
+      items: BooklogItem[];
       total: number;
       page: number;
       limit: number;
+      has_more: boolean;
     }>(`/booklog/items${qs ? `?${qs}` : ""}`);
   },
 
