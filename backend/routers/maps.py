@@ -777,12 +777,31 @@ async def build_sheet():
 
     work_index = _build_work_index(first_sheet)
 
+    # 같은 글이 브런치·네이버 양쪽에 있으면 브런치 링크를 쓴다.
+    # 네이버에는 브런치 글을 다시 올린 것이 섞여 있다.
+    brunch_url_by_title: dict[str, str] = {}
+    title_by_url: dict[str, str] = {}
+    for entry in scan_entries:
+        post_url = entry.get("post_url", "")
+        title_key = _squash(entry.get("post_title", ""))
+        if not title_key:
+            continue
+        title_by_url.setdefault(_norm(post_url), title_key)
+        if "brunch.co.kr" in post_url:
+            brunch_url_by_title.setdefault(title_key, post_url)
+
+    def prefer_brunch(post_url: str, essay_title: str = "") -> str:
+        if "brunch.co.kr" in post_url:
+            return post_url
+        key = _squash(essay_title) or title_by_url.get(_norm(post_url), "")
+        return brunch_url_by_title.get(key, post_url)
+
     # ── 두 번째 시트 기존 행 보존 ────────────────────────────────────────────────
     seen: set[tuple] = set()
     output: list[dict] = []
 
     for row in second_sheet:
-        url = row.get("Essay By moonee", "").strip()
+        url = prefer_brunch(row.get("Essay By moonee", "").strip(), row.get("Essay Title", ""))
         lat_str = row.get("Latitude", "").strip()
         lng_str = row.get("Longitude", "").strip()
         if not lat_str or not lng_str:
@@ -817,7 +836,7 @@ async def build_sheet():
         if not entry.get("coords"):
             continue
 
-        url = entry.get("post_url", "")
+        url = prefer_brunch(entry.get("post_url", ""), entry.get("post_title", ""))
         lat = entry["coords"]["lat"]
         lng = entry["coords"]["lng"]
         k = _row_key(url, lat, lng)
@@ -825,7 +844,7 @@ async def build_sheet():
             continue
         seen.add(k)
 
-        meta = meta_by_url.get(_norm(url), {})
+        meta = meta_by_url.get(_norm(entry.get("post_url", "")), {}) or meta_by_url.get(_norm(url), {})
         essay_title = entry.get("post_title", "")
         genre, work_title = meta.get("Genre", ""), meta.get("Work Title", "")
         if not work_title:  # URL 매칭이 안 되면 글 제목에서 작품명을 찾는다
@@ -841,6 +860,13 @@ async def build_sheet():
             "Latitude":         lat,
             "Longitude":        lng,
         })
+
+    # ── 마커 이름이 비지 않도록 Work Title 을 Essay Title 로 채운다 ──────────────
+    # My Maps 는 Work Title 을 마커 이름으로 쓰는데, 글 제목에 작품명이 없는 글
+    # (연재물·장소 중심 에세이)이 많아 그대로 두면 핀이 '제목 없음' 으로 뜬다.
+    for row in output:
+        if not row["Work Title"].strip():
+            row["Work Title"] = row["Essay Title"]
 
     # ── 정렬: Genre 있는 행 먼저, 이후 Genre → Work Title → Essay Title 순 ──────
     output.sort(key=lambda r: (
