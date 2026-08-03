@@ -7,7 +7,6 @@ const data = rawTree as DestinationTreeFile;
 function NodeItem({ node }: { node: DestinationNode }) {
   const childList = node.children;
   const hasChildren = Array.isArray(childList) && childList.length > 0;
-  const emptyBranch = Array.isArray(childList) && childList.length === 0;
 
   if (!hasChildren) {
     return (
@@ -24,11 +23,6 @@ function NodeItem({ node }: { node: DestinationNode }) {
             </a>
           ) : (
             <span className="text-[var(--site-ink)]">{node.label}</span>
-          )}
-          {emptyBranch && (
-            <span className="text-xs font-normal text-[var(--site-muted)]">
-              (세부 페이지는 기존 Google Sites에서 확인)
-            </span>
           )}
         </div>
       </li>

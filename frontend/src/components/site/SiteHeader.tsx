@@ -11,7 +11,6 @@ const nav = [
   { href: "/", label: "home" },
   { href: "/destination", label: "Destination" },
   { href: "/blog", label: "Essay" },
-  { href: "/genre", label: "Genre" },
   { href: "/booklog", label: "Booklog" },
   { href: "/about", label: "About" },
 ];

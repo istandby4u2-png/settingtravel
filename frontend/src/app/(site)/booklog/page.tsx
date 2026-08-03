@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BooklogContent } from "@/components/site/BooklogContent";
-import { SITE_CONFIG } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Booklog",
@@ -14,18 +13,6 @@ export default function BooklogPage() {
       <h1 className="font-[family-name:var(--font-site-serif)] text-3xl font-semibold text-[var(--site-ink)]">
         Booklog
       </h1>
-
-      <div className="mt-6 rounded-lg border border-[var(--site-border)] bg-white/90 p-5 shadow-sm">
-        <p className="text-sm font-medium text-[var(--site-ink)]">원문 Google Sites</p>
-        <a
-          href={`${SITE_CONFIG.legacySitesUrl}/booklog`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-2 inline-flex text-sm font-medium text-[var(--site-accent)] underline-offset-4 hover:underline"
-        >
-          2010–2017 연도별 원문 열기 →
-        </a>
-      </div>
 
       <div className="mt-10">
         <BooklogContent />

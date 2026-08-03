@@ -13,15 +13,6 @@ export function SiteFooter() {
             <Link href="/dashboard" className="underline-offset-4 hover:text-[var(--site-ink)] hover:underline">
               관리 도구
             </Link>
-            {" · "}
-            <a
-              href={SITE_CONFIG.legacySitesUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline-offset-4 hover:text-[var(--site-ink)] hover:underline"
-            >
-              기존 Google Sites 전체 목차
-            </a>
           </p>
         </div>
       </div>

@@ -712,6 +712,37 @@ def _row_key(url: str, lat: float, lng: float) -> tuple:
     return (_norm(url), round(lat, 3), round(lng, 3))
 
 
+def _squash(s: str) -> str:
+    return re.sub(r"\s+", "", s or "").lower()
+
+
+def _build_work_index(sheet_rows: list[dict]) -> list[tuple[str, str, str]]:
+    """작품명으로 글을 찾기 위한 색인. (정규화 제목, 원래 제목, 장르) 목록.
+
+    첫 번째 시트에 블로그 URL이 붙어 있는 행은 절반이 안 된다. 나머지는 글 제목에
+    작품명이 들어 있는 경우가 많아('<고독한 미식가>에 등장하는 미유키식당') 제목으로도 찾는다.
+    긴 제목부터 맞춰 봐야 짧은 제목이 먼저 걸리는 오탐을 피할 수 있다.
+    """
+    index: dict[str, tuple[str, str]] = {}
+    for row in sheet_rows:
+        title = (row.get("Title") or "").strip()
+        if len(title) < 2:
+            continue
+        index.setdefault(_squash(title), (title, (row.get("Genre") or "").strip()))
+    return sorted(
+        ((k, t, g) for k, (t, g) in index.items()), key=lambda x: -len(x[0])
+    )
+
+
+def _match_work(essay_title: str, work_index: list[tuple[str, str, str]]) -> tuple[str, str]:
+    """글 제목에 들어 있는 작품명을 찾아 (작품명, 장르) 를 돌려준다."""
+    squashed = _squash(essay_title)
+    for key, title, genre in work_index:
+        if key in squashed:
+            return title, genre
+    return "", ""
+
+
 @router.get("/api/maps/build-sheet")
 async def build_sheet():
     """
@@ -743,6 +774,8 @@ async def build_sheet():
                 "Work Title": row.get("Title", ""),
                 "Visit": row.get("Visit", ""),
             }
+
+    work_index = _build_work_index(first_sheet)
 
     # ── 두 번째 시트 기존 행 보존 ────────────────────────────────────────────────
     seen: set[tuple] = set()
@@ -793,10 +826,16 @@ async def build_sheet():
         seen.add(k)
 
         meta = meta_by_url.get(_norm(url), {})
+        essay_title = entry.get("post_title", "")
+        genre, work_title = meta.get("Genre", ""), meta.get("Work Title", "")
+        if not work_title:  # URL 매칭이 안 되면 글 제목에서 작품명을 찾는다
+            work_title, matched_genre = _match_work(essay_title, work_index)
+            genre = genre or matched_genre
+
         output.append({
-            "Genre":            meta.get("Genre", ""),
-            "Work Title":       meta.get("Work Title", ""),
-            "Essay Title":      entry.get("post_title", ""),
+            "Genre":            genre,
+            "Work Title":       work_title,
+            "Essay Title":      essay_title,
             "Essay By moonee":  url,
             "Visit":            meta.get("Visit", ""),
             "Latitude":         lat,

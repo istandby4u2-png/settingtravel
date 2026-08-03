@@ -2,7 +2,6 @@
 export const SITE_CONFIG = {
   title: "SETTING TRAVEL",
   tagline: "책・영화・드라마 속 그 곳",
-  legacySitesUrl: "https://sites.google.com/site/istandby4u2",
   brunch: "https://brunch.co.kr/@istandby4u2",
   naverBlog: "https://blog.naver.com/istandby4u2",
   books: [

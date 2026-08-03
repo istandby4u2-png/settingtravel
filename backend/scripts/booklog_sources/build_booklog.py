@@ -104,7 +104,7 @@ def load_gsites() -> list[dict]:
     out = []
     for year_str, rows in data.items():
         year = int(year_str)
-        url = f"https://sites.google.com/site/istandby4u2/booklog/{year}"
+
         header = [c.strip() for c in rows[0]]
         idx = {n: i for i, n in enumerate(header)}
 
@@ -133,7 +133,9 @@ def load_gsites() -> list[dict]:
                     purchase_date=ymd(pick(cells, "구매일자"), year),
                     note=pick(cells, "이야기"),
                     source="google_sites",
-                    source_url=url,
+                    # 연도 페이지 링크라 책 한 권을 가리키지도 않고, 사이트에서 Google Sites
+                    # 링크를 모두 걷어내기로 해서 남기지 않는다.
+                    source_url=None,
                     source_ref=f"google_sites:{year}:{seq}",
                     sort_order=order,
                 )
